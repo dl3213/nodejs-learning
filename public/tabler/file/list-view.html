@@ -45,7 +45,6 @@
                     <input id="danger-btn" class="btn" data-bs-toggle="modal" data-bs-target="#modal-danger">
                 </div>
 
-
                 <div class="container-xl">
 
                     <div html-modal="video-play"></div>
@@ -515,6 +514,8 @@
             htmlContentLoaded()
                 .then(_ => {
 
+                    updateWindowScreenInfo();
+
                     request.entityUrl = {
                         "page": '/api/rest/v1/file/sql/page',
                         "upload": '/api/rest/v1/file/upload',
@@ -559,16 +560,16 @@
                         .then(function(resp) {
                             if (resp.data.code === 200) {
                                 var codes = resp.data.data || [];
-                                var selectEl = document.getElementById('code');
-                                if (selectEl) {
-                                    selectEl.innerHTML = '<option value="">all</option>';
+                                var codeMenu = document.getElementById('code-dropdown-menu');
+                                if (codeMenu) {
+                                    codeMenu.innerHTML = '';
                                     codes.forEach(function(c) {
-                                        var opt = document.createElement('option');
-                                        opt.value = c;
-                                        opt.textContent = c;
-                                        selectEl.appendChild(opt);
+                                        var li = document.createElement('li');
+                                        li.innerHTML = '<label class="dropdown-item"><input type="checkbox" class="form-check-input me-2 code-checkbox" value="' + c + '"> ' + c + '</label>';
+                                        codeMenu.appendChild(li);
                                     });
                                 }
+                                updateCodeFilter();
                             }
                         })
                         .catch(function(err) { console.log(err); });
@@ -578,16 +579,36 @@
                         .then(function(resp) {
                             if (resp.data.code === 200) {
                                 var types = resp.data.data || [];
-                                var selectEl = document.querySelector('select[name="type"]');
-                                if (selectEl) {
-                                    selectEl.innerHTML = '<option value="">all</option>';
+                                var typeMenu = document.getElementById('type-dropdown-menu');
+                                if (typeMenu) {
+                                    typeMenu.innerHTML = '';
                                     types.forEach(function(t) {
-                                        var opt = document.createElement('option');
-                                        opt.value = t;
-                                        opt.textContent = t;
-                                        selectEl.appendChild(opt);
+                                        var li = document.createElement('li');
+                                        li.innerHTML = '<label class="dropdown-item"><input type="checkbox" class="form-check-input me-2 type-checkbox" value="' + t + '"> ' + t + '</label>';
+                                        typeMenu.appendChild(li);
                                     });
                                 }
+                                updateTypeFilter();
+                            }
+                        })
+                        .catch(function(err) { console.log(err); });
+
+                    // Fetch tags and populate dropdown
+                    axios.get(apiUrl + '/api/rest/v1/file/tag/name/distinct/all')
+                        .then(function(resp) {
+                            if (resp.data.code === 200) {
+                                var tags = resp.data.data || [];
+                                var tagMenu = document.getElementById('tag-dropdown-menu');
+                                if (tagMenu) {
+                                    tagMenu.innerHTML = '';
+                                    tags.forEach(function(t) {
+                                        var li = document.createElement('li');
+                                        var name = t.name || t;
+                                        li.innerHTML = '<label class="dropdown-item"><input type="checkbox" class="form-check-input me-2 tag-checkbox" value="' + name + '"> ' + name + '</label>';
+                                        tagMenu.appendChild(li);
+                                    });
+                                }
+                                updateTagFilter();
                             }
                         })
                         .catch(function(err) { console.log(err); });
@@ -608,6 +629,61 @@
                             request.pageNumber = 1;
                             load_data(request, 1);
                         });
+                    });
+
+                    // Code/type checkbox change events
+                    function updateCodeFilter() {
+                        var checked = document.querySelectorAll('#code-dropdown-menu .code-checkbox:checked');
+                        var values = [];
+                        var labels = [];
+                        checked.forEach(function(cb) {
+                            values.push(cb.value);
+                            labels.push(cb.value);
+                        });
+                        document.getElementById('code-values').value = values.join(',');
+                        document.getElementById('code-label').textContent = labels.length ? labels.join(', ') : 'select';
+                    }
+
+                    function updateTypeFilter() {
+                        var checked = document.querySelectorAll('#type-dropdown-menu .type-checkbox:checked');
+                        var values = [];
+                        var labels = [];
+                        checked.forEach(function(cb) {
+                            values.push(cb.value);
+                            labels.push(cb.value);
+                        });
+                        document.getElementById('type-values').value = values.join(',');
+                        document.getElementById('type-label').textContent = labels.length ? labels.join(', ') : 'select';
+                    }
+
+                    function updateTagFilter() {
+                        var checked = document.querySelectorAll('#tag-dropdown-menu .tag-checkbox:checked');
+                        var values = [];
+                        var labels = [];
+                        checked.forEach(function(cb) {
+                            values.push(cb.value);
+                            labels.push(cb.value);
+                        });
+                        document.getElementById('tag-values').value = values.join(',');
+                        document.getElementById('tag-label').textContent = labels.length ? labels.join(', ') : 'select';
+                    }
+
+                    document.addEventListener('change', function(evt) {
+                        if (evt.target.classList.contains('code-checkbox')) {
+                            updateCodeFilter();
+                            request.pageNumber = 1;
+                            load_data(request, 1);
+                        }
+                        if (evt.target.classList.contains('type-checkbox')) {
+                            updateTypeFilter();
+                            request.pageNumber = 1;
+                            load_data(request, 1);
+                        }
+                        if (evt.target.classList.contains('tag-checkbox')) {
+                            updateTagFilter();
+                            request.pageNumber = 1;
+                            load_data(request, 1);
+                        }
                     });
 
                     document.getElementById('tag-submit')?.addEventListener('click', function(e) {

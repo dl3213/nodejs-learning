@@ -43,24 +43,43 @@
                 <div class="row" style="margin-bottom: 1%;">
                     <div class="col">
                         code
-                        <select type="text" class="form-select code-input query-item" id="code" name="code" value="">
-                            <option value="">all</option>
-                        </select>
+                        <div class="dropdown">
+                            <button class="form-control dropdown-toggle text-start" type="button" id="code-dropdown-btn" data-bs-toggle="dropdown" aria-expanded="false" style="width:100%">
+                                <span id="code-label">select</span>
+                            </button>
+                            <ul class="dropdown-menu" id="code-dropdown-menu" aria-labelledby="code-dropdown-btn" style="max-height: 200px; overflow-y: auto; width:100%">
+                            </ul>
+                            <input type="hidden" id="code-values" name="code" value="">
+                        </div>
                     </div>
                     <div class="col">
                         type
-                        <select type="text" class="form-select query-item" name="type" value="">
-                            <option value="">all</option>
-                            <option value="image">image</option>
-                            <option value="video">video</option>
-                            <option value="audio">audio</option>
-                            <option value="application">application</option>
-                        </select>
+                        <div class="dropdown">
+                            <button class="form-control dropdown-toggle text-start" type="button" id="type-dropdown-btn" data-bs-toggle="dropdown" aria-expanded="false" style="width:100%">
+                                <span id="type-label">select</span>
+                            </button>
+                            <ul class="dropdown-menu" id="type-dropdown-menu" aria-labelledby="type-dropdown-btn" style="max-height: 200px; overflow-y: auto; width:100%">
+                            </ul>
+                            <input type="hidden" id="type-values" name="type" value="">
+                        </div>
                     </div>
                     <div class="col">
                         keyword
                         <div class="input-icon">
                             <input type="text" name="keyword" class="form-control query-item" placeholder="Search…" value=""> 
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="margin-bottom: 1%;">
+                    <div class="col-12">
+                        tags
+                        <div class="dropdown">
+                            <button class="form-control dropdown-toggle text-start" type="button" id="tag-dropdown-btn" data-bs-toggle="dropdown" aria-expanded="false" style="width:100%">
+                                <span id="tag-label">select</span>
+                            </button>
+                            <ul class="dropdown-menu" id="tag-dropdown-menu" aria-labelledby="tag-dropdown-btn" style="max-height: 200px; overflow-y: auto; width:100%">
+                            </ul>
+                            <input type="hidden" id="tag-values" name="tags" value="">
                         </div>
                     </div>
                 </div>

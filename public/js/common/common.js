@@ -1,7 +1,7 @@
 var Common = {
     NumberOfDecimal: 2,
     server: {   
-        API_URL: "http://192.168.10.62:8080",
+        API_URL: "http://192.168.10.55:8080",
     },
     showLoading: (el, msg) => {
         var target = document.getElementById(el)

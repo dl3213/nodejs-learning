@@ -62,8 +62,7 @@ var contextHtml = document.getElementById('main-context');
 //     loop: false,
 //     showCursor: false,
 // });
-window.addEventListener('resize', function (event) {
-    // 在这里编写你的代码来处理窗口大小变化
+function updateWindowScreenInfo() {
     requestAnimationFrame(() => {
         if (document.getElementById("pageTitle")) {
             document.getElementById("pageTitle").innerHTML = `${Common.checkBreakpoint()}`;
@@ -74,8 +73,10 @@ window.addEventListener('resize', function (event) {
         if (document.getElementById(screenInfo)) {
             document.getElementById(screenInfo).innerHTML = `${screen.width}*${screen.height}`
         }
-    })
-});
+    });
+}
+window.addEventListener('resize', updateWindowScreenInfo);
+updateWindowScreenInfo();
 
 function loadData(request) {
     load_data(request)
@@ -569,11 +570,32 @@ function action(targetId, actionEvent, currentTarget, evt) {
 
         return
     }
-    if ("share" === actionEvent) {
+        if ("share" === actionEvent) {
         return
     }
     if ("info" === actionEvent) {
 
+    }
+    if ("unbind-tag" === actionEvent) {
+        var tagId = currentTarget?.getAttribute('tag-id');
+        if (id && tagId) {
+            axios.post(apiUrl + '/api/rest/v1/file/tag/remove', {
+                fileId: id,
+                tagId: tagId
+            })
+            .then(function(resp) {
+                if (resp.data.code === 200) {
+                    load_data(request, 1);
+                } else {
+                    tablerCommon.alertDanger(resp.data.msg || resp.data.message);
+                }
+            })
+            .catch(function(err) {
+                console.log(err);
+                tablerCommon.alertDanger(err.message);
+            });
+        }
+        return;
     }
 
     if ("book-detail-click" === actionEvent) {

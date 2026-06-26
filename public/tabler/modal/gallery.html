@@ -136,7 +136,7 @@
                 <div class="row row-cards">
                     <div class="col-12">
                         <div class="tags-list">
-                            {tags ? tags.map(function(t){ return '<span class="tag">'+t.name+'<a href="#" class="btn-close" onclick="return false;"></a></span>'; }).join('') : ''}
+                            {tags ? tags.map(function(t){ return '<span class="tag">'+t.name+'<a href="#" class="btn-close" target-id="'+id+'" action-event="unbind-tag" tag-id="'+t.id+'"></a></span>'; }).join('') : ''}
                         </div>
                     </div>
                 </div>
